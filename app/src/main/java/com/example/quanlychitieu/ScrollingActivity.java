@@ -31,10 +31,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private ArrayList<chitieuitems> arrayList = new ArrayList<>();
     private FrameLayout thuchi;
-    private Integer sodu = 0;
+    private Integer sodu = 1000000;
     private TextView tvSoDu;
     private RecyclerView recyclerView;
-    private Intent intentsodu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,22 +61,24 @@ public class ScrollingActivity extends AppCompatActivity {
 
     public void initview(){
         tvSoDu = (TextView) findViewById(R.id.gia_tri_so_du);
+        tvSoDu.setText(sodu.toString() + "VND");
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
 
-        arrayList.add(new chitieuitems("Khoan chi", "100.000 vnd"));
-        arrayList.add(new chitieuitems("Khoan thu", "20.000 vnd"));
-        arrayList.add(new chitieuitems("Khoan thu", "20.000 vnd"));
-        arrayList.add(new chitieuitems("Khoan thu", "20.000 vnd"));
-        arrayList.add(new chitieuitems("Khoan chi", "100.000 vnd"));
+        arrayList.add(new chitieuitems("Mua sắm", "100.000 vnd"));
+        arrayList.add(new chitieuitems("Di Chuyển", "20.000 vnd"));
+        arrayList.add(new chitieuitems("Ăn Uống", "20.000 vnd"));
+        arrayList.add(new chitieuitems("Trả Nợ", "20.000 vnd"));
+        arrayList.add(new chitieuitems("Điện Nước", "100.000 vnd"));
 
         itemsAdapter itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
         recyclerView.setAdapter(itemsadapter);
 
-        sodu = Integer.parseInt(tvSoDu.getText().toString());
+
     }
 
 

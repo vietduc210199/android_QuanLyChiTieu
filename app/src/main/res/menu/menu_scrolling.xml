@@ -8,5 +8,15 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:title="Đăng Xuất"
+        app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/thoat"
+        android:orderInCategory="100"
+        android:title="Thoát"
+        app:showAsAction="never"/>
 </menu>

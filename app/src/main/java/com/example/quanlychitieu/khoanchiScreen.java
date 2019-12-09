@@ -41,12 +41,14 @@ public class khoanchiScreen extends AppCompatActivity {
                 MucChiTieu = et_MucChiTieu.getText().toString();
                 GiaTri = et_GiaTri.getText().toString();
 
-                Bundle bundle = new Bundle();
-                bundle.putString(MUCHITIEU, MucChiTieu);
+                Bundle bundle = new Bundle();//Tạo Bundle để truyền dữ liệu về
+
+                //Đưa các giá trị vào bundle
+                bundle.putString(MUCHITIEU, MucChiTieu);//
                 bundle.putString(GIATRI, GiaTri);
 
-                intent.putExtra(BUNDLE, bundle);
-                setResult(RESULT_OK, intent);
+                intent.putExtra(BUNDLE, bundle);//Gửi bundle vào intent
+                setResult(RESULT_OK, intent);//Truyền intent về với RESULT_OK
                 khoanchiScreen.super.finish();
             }
         });

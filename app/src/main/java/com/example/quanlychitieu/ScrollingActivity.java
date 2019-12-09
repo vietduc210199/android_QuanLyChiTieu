@@ -29,46 +29,47 @@ import java.util.ArrayList;
 
 public class ScrollingActivity extends AppCompatActivity {
 
-    private ArrayList<chitieuitems> arrayList = new ArrayList<>();
-    private FrameLayout thuchi;
-    private Integer sodu = 1000000;
-    private TextView tvSoDu;
-    private RecyclerView recyclerView;
+    private ArrayList<chitieuitems> arrayList = new ArrayList<>(); // List Lưu trữ các khoản giao dịch
+    private Integer sodu = 1000000;// Khởi tạo số dư ban đầu
+    private TextView tvSoDu;// Text hiển thị số dư
+    private RecyclerView recyclerView; // Hiển thị List các giao dịch
+    private Toolbar toolbar;
 
-
-    @Override
+    @Override//Khởi chạy màn hình
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        initview();// Tạo các biến đối tượng  ban đầu
+
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //Vào màn hình tạo giao dịch khi ấn nút
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ScrollingActivity.this, khoanchiScreen.class);
-                startActivityForResult(intent, 2);
+                startActivityForResult(intent, 2);//Chạy màn hình giao dịch với code thực thi = 2
             }
         });
-        Log.i("check","dang init");
-        initview();
+
 
 
     }
 
-
-
     public void initview(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         tvSoDu = (TextView) findViewById(R.id.gia_tri_so_du);
-        tvSoDu.setText(sodu.toString() + "VND");
+        tvSoDu.setText(sodu.toString() + " VND");
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-
+        //Add list giao dịch hiển thị demo
         arrayList.add(new chitieuitems("Mua sắm", "100.000 vnd"));
         arrayList.add(new chitieuitems("Di Chuyển", "20.000 vnd"));
         arrayList.add(new chitieuitems("Ăn Uống", "20.000 vnd"));
@@ -77,8 +78,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
         itemsAdapter itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
         recyclerView.setAdapter(itemsadapter);
-
-
     }
 
 
@@ -90,18 +89,22 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     @Override
+    //Điều hướng các lựa chọn trong menu
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //Vào màn hình điều chỉnh số dư khi ấn nút
         if (id == R.id.dieu_chinh_so_du) {
             Intent intent = new Intent(ScrollingActivity.this, vicontrolscreen.class);
             String giatrisodu = tvSoDu.getText().toString();
             intent.putExtra("SODU",giatrisodu);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, 1);//Chạy màn hình điều chỉnh số dư với code thực thi = 2
+        }
+
+        //Thoát
+        if (id == R.id.thoat){
+            this.finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -115,33 +118,33 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     @Override
+    //Hàm nhận và xử lí dữ liệu được trả về từ các màn hình con
     protected void onActivityResult (int requestcode, int resultcode , Intent data){
         super.onActivityResult(requestcode,resultcode,data);
         Log.i("check","dang nhan result");
-        if (resultcode == RESULT_OK && requestcode == 1)
+        if (resultcode == RESULT_OK && requestcode == 1)//Nếu kết quả trả về từ màn hình điều chỉnh(code thực thi == 1) số dư với RESULT_OK
         {
-            if(data.hasExtra("SODU"))
+            if(data.hasExtra("SODU"))//Nếu giá trị trả về có key == "SODU"
             {
 
-                sodu = Integer.parseInt(data.getExtras().getString("SODU"));
-                tvSoDu.setText(sodu.toString() + " VND");
+                sodu = Integer.parseInt(data.getExtras().getString("SODU")); //Lấy giá trị vào biến lưu trữ số dư
+                tvSoDu.setText(sodu.toString() + " VND");// hiển thị số dư mới lên màn hình
             }
         }
 
-        if (resultcode == RESULT_OK && requestcode == 2)
+        if (resultcode == RESULT_OK && requestcode == 2)//Nếu kết quả trả về từ màn hình tạo giao dịch (code thực thi == 2) với RESULT_OK
         {
             Bundle bundle = data.getBundleExtra(khoanchiScreen.BUNDLE);
             String mucchitieu = bundle.getString(khoanchiScreen.MUCHITIEU);
             String giatri = bundle.getString(khoanchiScreen.GIATRI);
 
-            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND"));
+            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND"));//Add khoản giao dịch mới vào List
             itemsAdapter itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
-            recyclerView.setAdapter(itemsadapter);
+            recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
 
-            sodu -= Integer.parseInt(giatri);
+            sodu -= Integer.parseInt(giatri);//Điều chỉnh lại số dư sau giao dịch
 
             tvSoDu.setText(sodu.toString() + " VND");
-
         }
     }
 }

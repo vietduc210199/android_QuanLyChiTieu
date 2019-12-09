@@ -25,15 +25,15 @@ public class vicontrolscreen extends AppCompatActivity {
 
         initview();
 
-        final Intent intent = getIntent();
-        String giatrisodu = intent.getStringExtra("SODU");
+        final Intent intent = getIntent();// Nhận intent từ màn hình chính
+        String giatrisodu = intent.getStringExtra("SODU");//Lấy giá trị số dư cũ
         editssodu.setText(giatrisodu);
         donebnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String sodu = editssodu.getText().toString();
-                intent.putExtra("SODU", sodu);
-                setResult(RESULT_OK, intent);
+                intent.putExtra("SODU", sodu);// Truyền số dư mới vào intent
+                setResult(RESULT_OK, intent);// gửi intent về với RESULT_OK
                 finish();
             }
         });

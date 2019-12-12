@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
@@ -31,8 +32,9 @@ public class vicontrolscreen extends AppCompatActivity {
         donebnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sodu = editssodu.getText().toString();
+                String sodu = editssodu.getText().toString() ;
                 intent.putExtra("SODU", sodu);// Truyền số dư mới vào intent
+                Log.i("Check so du", sodu);
                 setResult(RESULT_OK, intent);// gửi intent về với RESULT_OK
                 finish();
             }

@@ -3,9 +3,18 @@ package com.example.quanlychitieu;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.quanlychitieu.AccountActivity.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -30,17 +39,36 @@ import java.util.ArrayList;
 public class ScrollingActivity extends AppCompatActivity {
 
     private ArrayList<chitieuitems> arrayList = new ArrayList<>(); // List Lưu trữ các khoản giao dịch
-    private Integer sodu = 1000000;// Khởi tạo số dư ban đầu
+    private Integer sodu;// Khởi tạo số dư ban đầu
     private TextView tvSoDu;// Text hiển thị số dư
     private RecyclerView recyclerView; // Hiển thị List các giao dịch
     private Toolbar toolbar;
+    private Boolean loged = false;
+
+    public DatabaseReference mDatabase;
 
     @Override//Khởi chạy màn hình
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+//
+//        if(!loged) {
+//            Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
+//            startActivity(intent);
+//        }
+
+        dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi;
+
+
         initview();// Tạo các biến đối tượng  ban đầu
+
+
+
+
 
         setSupportActionBar(toolbar);
 
@@ -54,30 +82,19 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
 
     public void initview(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         tvSoDu = (TextView) findViewById(R.id.gia_tri_so_du);
-        tvSoDu.setText(sodu.toString() + " VND");
+        tvSoDu.setText(sodu + " VND");
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        //Add list giao dịch hiển thị demo
-        arrayList.add(new chitieuitems("Mua sắm", "100.000 vnd"));
-        arrayList.add(new chitieuitems("Di Chuyển", "20.000 vnd"));
-        arrayList.add(new chitieuitems("Ăn Uống", "20.000 vnd"));
-        arrayList.add(new chitieuitems("Trả Nợ", "20.000 vnd"));
-        arrayList.add(new chitieuitems("Điện Nước", "100.000 vnd"));
-
-        itemsAdapter itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
-        recyclerView.setAdapter(itemsadapter);
     }
 
 
@@ -97,8 +114,8 @@ public class ScrollingActivity extends AppCompatActivity {
         //Vào màn hình điều chỉnh số dư khi ấn nút
         if (id == R.id.dieu_chinh_so_du) {
             Intent intent = new Intent(ScrollingActivity.this, vicontrolscreen.class);
-            String giatrisodu = tvSoDu.getText().toString();
-            intent.putExtra("SODU",giatrisodu);
+
+            intent.putExtra("SODU",sodu.toString());
             startActivityForResult(intent, 1);//Chạy màn hình điều chỉnh số dư với code thực thi = 2
         }
 
@@ -109,13 +126,7 @@ public class ScrollingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void addFragment (Fragment fragment) {
-        FragmentManager fmgr = getSupportFragmentManager();
-        FragmentTransaction ft = fmgr.beginTransaction();
-        ft.add(R.id.thu_chi_items, fragment);
-        ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.commit();
-    }
+
 
     @Override
     //Hàm nhận và xử lí dữ liệu được trả về từ các màn hình con
@@ -128,7 +139,18 @@ public class ScrollingActivity extends AppCompatActivity {
             {
 
                 sodu = Integer.parseInt(data.getExtras().getString("SODU")); //Lấy giá trị vào biến lưu trữ số dư
-                tvSoDu.setText(sodu.toString() + " VND");// hiển thị số dư mới lên màn hình
+
+                mDatabase.child("Giá trị số dư").setValue(sodu, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                        if(databaseError == null) {
+                            Toast.makeText(ScrollingActivity.this, "Điều chính số dư thành công!", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(ScrollingActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
             }
         }
 
@@ -139,12 +161,54 @@ public class ScrollingActivity extends AppCompatActivity {
             String giatri = bundle.getString(khoanchiScreen.GIATRI);
 
             arrayList.add(new chitieuitems(mucchitieu, giatri + " VND"));//Add khoản giao dịch mới vào List
-            itemsAdapter itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
-            recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
+
+            mDatabase.child("Danh sách giao dịch").setValue(arrayList);
+
 
             sodu -= Integer.parseInt(giatri);//Điều chỉnh lại số dư sau giao dịch
+            mDatabase.child("Giá trị số dư").setValue(sodu);
 
-            tvSoDu.setText(sodu.toString() + " VND");
         }
+    }
+
+
+
+
+    private void dataChangeEvent(){
+        mDatabase.child("Giá trị số dư").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                sodu = Integer.parseInt(dataSnapshot.getValue().toString());
+                tvSoDu.setText(sodu.toString() + " VND");// hiển thị số dư mới lên màn hình
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabase.child("Danh sách giao dịch").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer i = 0;
+                while(dataSnapshot.child(i.toString()).getValue() != null)
+                {
+                    String muchitieu = dataSnapshot.child(i.toString()).child("loaichitieu").getValue().toString();
+                    String giatri = dataSnapshot.child(i.toString()).child("giatri").getValue().toString();
+
+                    arrayList.add(new chitieuitems(muchitieu,giatri));
+                    i++;
+                }
+
+                itemsAdapter itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
+                recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -85,5 +85,6 @@
         android:layout_marginBottom="-154dp"
         android:textSize="16dp"
         android:textStyle="bold"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:overScrollMode="always"/>
 </RelativeLayout>

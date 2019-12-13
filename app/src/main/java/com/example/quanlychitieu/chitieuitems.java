@@ -4,6 +4,10 @@ public class chitieuitems {
     private String Loaichitieu;
     private String giatri;
 
+    public chitieuitems() {
+        //Dùng để lấy dữ liệu về từ firebase
+    }
+
     public chitieuitems(String loaichitieu, String giatri) {
         Loaichitieu = loaichitieu;
         this.giatri = giatri;

@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.quanlychitieu.AccountActivity.LoginActivity;
+import com.example.quanlychitieu.AccountActivity.SignupActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,35 +47,33 @@ public class ScrollingActivity extends AppCompatActivity {
     private RecyclerView recyclerView; // Hiển thị List các giao dịch
     private Toolbar toolbar;
     private Boolean loged = false;
+    private FloatingActionButton fab;
 
     public DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+
+    private String userID;
 
     @Override//Khởi chạy màn hình
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
-//
-//        if(!loged) {
-//            Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
-//            startActivity(intent);
-//        }
-
-        dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi;
-
 
         initview();// Tạo các biến đối tượng  ban đầu
 
+        if (user != null) {
+            userID = user.getUid();
+            mDatabase = mDatabase.child(userID);
 
+        } else {
+            Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
+            startActivityForResult(intent, 3);
+        }
 
+        dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi
 
-
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //Vào màn hình tạo giao dịch khi ấn nút
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +84,8 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     public void initview(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -95,8 +98,13 @@ public class ScrollingActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-    }
+        setSupportActionBar(toolbar);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,10 +131,14 @@ public class ScrollingActivity extends AppCompatActivity {
         if (id == R.id.thoat){
             this.finish();
         }
+
+        if (id == R.id.logout) {
+            mAuth.signOut();
+            Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
+            startActivityForResult(intent, 3);
+        }
         return super.onOptionsItemSelected(item);
     }
-
-
 
     @Override
     //Hàm nhận và xử lí dữ liệu được trả về từ các màn hình con
@@ -164,17 +176,24 @@ public class ScrollingActivity extends AppCompatActivity {
 
             mDatabase.child("Danh sách giao dịch").setValue(arrayList);
 
-
             sodu -= Integer.parseInt(giatri);//Điều chỉnh lại số dư sau giao dịch
             mDatabase.child("Giá trị số dư").setValue(sodu);
 
         }
+
+        if (resultcode == RESULT_OK && requestcode == 3)
+        {
+            user = mAuth.getCurrentUser();
+            userID = user.getUid();
+            mDatabase = FirebaseDatabase.getInstance().getReference().child(userID);
+
+            dataChangeEvent();
+        }
     }
 
-
-
-
     private void dataChangeEvent(){
+
+
         mDatabase.child("Giá trị số dư").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -192,12 +211,13 @@ public class ScrollingActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer i = 0;
+
+                arrayList = new ArrayList<chitieuitems>();
                 while(dataSnapshot.child(i.toString()).getValue() != null)
                 {
-                    String muchitieu = dataSnapshot.child(i.toString()).child("loaichitieu").getValue().toString();
-                    String giatri = dataSnapshot.child(i.toString()).child("giatri").getValue().toString();
+                    chitieuitems items = dataSnapshot.child(i.toString()).getValue(chitieuitems.class);
 
-                    arrayList.add(new chitieuitems(muchitieu,giatri));
+                    arrayList.add(items);
                     i++;
                 }
 

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
     ArrayList<chitieuitems> items_chitieu;
@@ -34,6 +35,7 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.txtLoaiChiTieu.setText(items_chitieu.get(getItemCount() - position - 1).getLoaichitieu());
         holder.txtGiaTri.setText(items_chitieu.get(getItemCount() - position - 1).getGiatri());
+        holder.txtThoiGian.setText(items_chitieu.get(getItemCount() - position - 1).getThoigian());
     }
 
     @Override
@@ -45,12 +47,14 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
 
         TextView txtLoaiChiTieu;
         TextView txtGiaTri;
+        TextView txtThoiGian;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             txtLoaiChiTieu = (TextView)itemView.findViewById(R.id.loai_chi_tieu);
             txtGiaTri = (TextView)itemView.findViewById(R.id.gia_tri_item);
+            txtThoiGian = (TextView)itemView.findViewById(R.id.thoi_gian);
         }
     }
 }

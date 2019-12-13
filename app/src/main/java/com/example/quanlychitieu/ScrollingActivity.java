@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -46,7 +47,6 @@ public class ScrollingActivity extends AppCompatActivity {
     private TextView tvSoDu;// Text hiển thị số dư
     private RecyclerView recyclerView; // Hiển thị List các giao dịch
     private Toolbar toolbar;
-    private Boolean loged = false;
     private FloatingActionButton fab;
 
     public DatabaseReference mDatabase;
@@ -171,8 +171,9 @@ public class ScrollingActivity extends AppCompatActivity {
             Bundle bundle = data.getBundleExtra(khoanchiScreen.BUNDLE);
             String mucchitieu = bundle.getString(khoanchiScreen.MUCHITIEU);
             String giatri = bundle.getString(khoanchiScreen.GIATRI);
+            String thoigian = bundle.getString(khoanchiScreen.THOIGIAN);
 
-            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND"));//Add khoản giao dịch mới vào List
+            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian));//Add khoản giao dịch mới vào List
 
             mDatabase.child("Danh sách giao dịch").setValue(arrayList);
 

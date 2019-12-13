@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.example.quanlychitieu.AccountActivity.LoginActivity;
 import com.example.quanlychitieu.AccountActivity.SignupActivity;
+import com.example.quanlychitieu.ChiTieuActivity.ChiTieuActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -78,7 +79,7 @@ public class ScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ScrollingActivity.this, khoanchiScreen.class);
+                Intent intent = new Intent(ScrollingActivity.this, ChiTieuActivity.class);
                 startActivityForResult(intent, 2);//Chạy màn hình giao dịch với code thực thi = 2
             }
         });
@@ -168,16 +169,18 @@ public class ScrollingActivity extends AppCompatActivity {
 
         if (resultcode == RESULT_OK && requestcode == 2)//Nếu kết quả trả về từ màn hình tạo giao dịch (code thực thi == 2) với RESULT_OK
         {
-            Bundle bundle = data.getBundleExtra(khoanchiScreen.BUNDLE);
-            String mucchitieu = bundle.getString(khoanchiScreen.MUCHITIEU);
-            String giatri = bundle.getString(khoanchiScreen.GIATRI);
-            String thoigian = bundle.getString(khoanchiScreen.THOIGIAN);
+            Bundle bundle = data.getBundleExtra(ChiTieuActivity.BUNDLE);
+            String mucchitieu = bundle.getString(ChiTieuActivity.MUCHITIEU);
+            String giatri = bundle.getString(ChiTieuActivity.GIATRI);
+            String thoigian = bundle.getString(ChiTieuActivity.THOIGIAN);
+            String loaigiaodich = bundle.getString(ChiTieuActivity.LOAIGIAODICH);
 
             arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian));//Add khoản giao dịch mới vào List
 
             mDatabase.child("Danh sách giao dịch").setValue(arrayList);
 
-            sodu -= Integer.parseInt(giatri);//Điều chỉnh lại số dư sau giao dịch
+            if(loaigiaodich == "Khoản Chi")sodu -= Integer.parseInt(giatri);//Điều chỉnh lại số dư sau giao dịch
+            else sodu += Integer.parseInt(giatri);
             mDatabase.child("Giá trị số dư").setValue(sodu);
 
         }

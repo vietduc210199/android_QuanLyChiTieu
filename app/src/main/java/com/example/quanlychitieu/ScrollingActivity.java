@@ -1,6 +1,7 @@
 package com.example.quanlychitieu;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.example.quanlychitieu.AccountActivity.LoginActivity;
@@ -44,11 +45,19 @@ import java.util.Date;
 public class ScrollingActivity extends AppCompatActivity {
 
     private ArrayList<chitieuitems> arrayList = new ArrayList<>(); // List Lưu trữ các khoản giao dịch
-    private Integer sodu;// Khởi tạo số dư ban đầu
+
     private TextView tvSoDu;// Text hiển thị số dư
     private RecyclerView recyclerView; // Hiển thị List các giao dịch
     private Toolbar toolbar;
     private FloatingActionButton fab;
+    private TextView tvThuNhap;
+    private TextView tvChiTieu;
+    private TextView tvDaoDongSoDu;
+
+    private Integer sodu;// Khởi tạo số dư ban đầu
+    private Integer thunhap = 100000;
+    private Integer chitieu = 100000;
+    private Integer daodongsodu = 100000;
 
     public DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -61,19 +70,18 @@ public class ScrollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-
         initview();// Tạo các biến đối tượng  ban đầu
+
 
         if (user != null) {
             userID = user.getUid();
             mDatabase = mDatabase.child(userID);
+            dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi
 
         } else {
             Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
             startActivityForResult(intent, 3);
         }
-
-        dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi
 
         //Vào màn hình tạo giao dịch khi ấn nút
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,8 +99,17 @@ public class ScrollingActivity extends AppCompatActivity {
     public void initview(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        tvSoDu = (TextView) findViewById(R.id.gia_tri_so_du);
+        tvSoDu = (TextView) findViewById(R.id.so_du);
         tvSoDu.setText(sodu + " VND");
+
+        tvThuNhap = (TextView) findViewById(R.id.tv_ThuNhap);
+        tvThuNhap.setText("+ " + thunhap + " VND");
+
+        tvChiTieu = (TextView) findViewById(R.id.tv_ChiTieu);
+        tvChiTieu.setText("- " + chitieu + " VND");
+
+        tvDaoDongSoDu = (TextView) findViewById(R.id.tv_DaoDongSoDu);
+        tvDaoDongSoDu.setText(daodongsodu + " VND");
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -175,13 +192,31 @@ public class ScrollingActivity extends AppCompatActivity {
             String thoigian = bundle.getString(ChiTieuActivity.THOIGIAN);
             String loaigiaodich = bundle.getString(ChiTieuActivity.LOAIGIAODICH);
 
-            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian));//Add khoản giao dịch mới vào List
+            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian, loaigiaodich));//Add khoản giao dịch mới vào List
 
             mDatabase.child("Danh sách giao dịch").setValue(arrayList);
 
-            if(loaigiaodich == "Khoản Chi")sodu -= Integer.parseInt(giatri);//Điều chỉnh lại số dư sau giao dịch
-            else sodu += Integer.parseInt(giatri);
-            mDatabase.child("Giá trị số dư").setValue(sodu);
+            if(loaigiaodich.equals("Khoản Chi") ){
+                Log.i("check", loaigiaodich);
+                sodu -= Integer.parseInt(giatri);//Điều chỉnh lại số dư sau giao dịch
+                mDatabase.child("Giá trị số dư").setValue(sodu);
+                chitieu += Integer.parseInt(giatri);
+                mDatabase.child("Chi Tiêu").setValue(chitieu);
+
+                daodongsodu = thunhap - chitieu;
+                mDatabase.child("Dao Động Số Dư").setValue(daodongsodu);
+
+            }
+            else if (loaigiaodich.equals("Khoản Thu")){
+                sodu += Integer.parseInt(giatri);
+                thunhap += Integer.parseInt(giatri);
+                mDatabase.child("Thu Nhập").setValue(thunhap);
+
+                daodongsodu = thunhap - chitieu;
+                mDatabase.child("Dao Động Số Dư").setValue(daodongsodu);
+                mDatabase.child("Giá trị số dư").setValue(sodu);
+            }
+
 
         }
 
@@ -210,6 +245,53 @@ public class ScrollingActivity extends AppCompatActivity {
 
             }
         });
+
+        mDatabase.child("Thu Nhập").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                thunhap = Integer.parseInt(dataSnapshot.getValue().toString());
+                tvThuNhap.setText("+ " + thunhap + " VND");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabase.child("Chi Tiêu").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                chitieu = Integer.parseInt(dataSnapshot.getValue().toString());
+                tvChiTieu.setText("- " + chitieu + " VND");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabase.child("Dao Động Số Dư").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                daodongsodu = Integer.parseInt(dataSnapshot.getValue().toString());
+                if(daodongsodu >= 0)
+                {
+                    tvDaoDongSoDu.setTextColor(Color.argb(255, 54, 243, 28));
+                    tvDaoDongSoDu.setText("+ " + daodongsodu + " VND");
+                }else {
+                    tvDaoDongSoDu.setTextColor(Color.argb(255, 233, 30, 99));
+                    tvDaoDongSoDu.setText(daodongsodu + " VND");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         mDatabase.child("Danh sách giao dịch").addValueEventListener(new ValueEventListener() {
             @Override

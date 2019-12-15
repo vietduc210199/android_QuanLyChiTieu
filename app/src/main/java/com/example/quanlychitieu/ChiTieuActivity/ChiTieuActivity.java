@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -56,8 +57,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(1).select();
-        tabLayout.getTabAt(0).select();
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -158,6 +158,8 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
 
             }
         });
+
+
     }
 
     @Override
@@ -168,5 +170,8 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
 
         final EditText et_ThoiGian_chi = (EditText) findViewById(R.id.et_ThoiGian_chi);
         et_ThoiGian_chi.setText(DateFormat.getDateInstance().format(calendar.getTime()));
+
+        final EditText et_ThoiGian_thu = (EditText) findViewById(R.id.et_ThoiGian_thu);
+        et_ThoiGian_thu.setText(DateFormat.getDateInstance().format(calendar.getTime()));
     }
 }

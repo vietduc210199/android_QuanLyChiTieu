@@ -36,6 +36,7 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
         holder.txtLoaiChiTieu.setText(items_chitieu.get(getItemCount() - position - 1).getLoaichitieu());
         holder.txtGiaTri.setText(items_chitieu.get(getItemCount() - position - 1).getGiatri());
         holder.txtThoiGian.setText(items_chitieu.get(getItemCount() - position - 1).getThoigian());
+        holder.txtLoaiGiaoDich.setText(items_chitieu.get(getItemCount() - position - 1).getLoaigiaodich());
     }
 
     @Override
@@ -48,6 +49,7 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
         TextView txtLoaiChiTieu;
         TextView txtGiaTri;
         TextView txtThoiGian;
+        TextView txtLoaiGiaoDich;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,6 +57,7 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
             txtLoaiChiTieu = (TextView)itemView.findViewById(R.id.loai_chi_tieu);
             txtGiaTri = (TextView)itemView.findViewById(R.id.gia_tri_item);
             txtThoiGian = (TextView)itemView.findViewById(R.id.thoi_gian);
+            txtLoaiGiaoDich = (TextView) itemView.findViewById(R.id.loai_giao_dich);
         }
     }
 }

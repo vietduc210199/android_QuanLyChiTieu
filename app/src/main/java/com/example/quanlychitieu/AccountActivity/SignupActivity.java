@@ -45,8 +45,6 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 registration();
-
-
             }
         });
     }
@@ -58,7 +56,6 @@ public class SignupActivity extends AppCompatActivity {
         bntRegister = (Button)findViewById(R.id.register_signup);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
 
         textView = (TextView) findViewById(R.id.test);
 
@@ -75,6 +72,9 @@ public class SignupActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Log.e("check",task.getResult().getUser().getUid().toString());
                             mDatabase.child(task.getResult().getUser().getUid()).child("Giá trị số dư").setValue(0);
+                            mDatabase.child(task.getResult().getUser().getUid()).child("Thu Nhập").setValue(0);
+                            mDatabase.child(task.getResult().getUser().getUid()).child("Chi Tiêu").setValue(0);
+                            mDatabase.child(task.getResult().getUser().getUid()).child("Dao Động Số Dư").setValue(0);
                             mDatabase.child(task.getResult().getUser().getUid()).child("Danh sách giao dịch").setValue("   ");
                             SignupActivity.super.finish();
                         }else {

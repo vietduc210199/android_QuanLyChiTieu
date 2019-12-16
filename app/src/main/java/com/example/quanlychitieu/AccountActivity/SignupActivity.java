@@ -76,6 +76,8 @@ public class SignupActivity extends AppCompatActivity {
                             mDatabase.child(task.getResult().getUser().getUid()).child("Chi Tiêu").setValue(0);
                             mDatabase.child(task.getResult().getUser().getUid()).child("Dao Động Số Dư").setValue(0);
                             mDatabase.child(task.getResult().getUser().getUid()).child("Danh sách giao dịch").setValue("   ");
+                            mDatabase.child(task.getResult().getUser().getUid()).child("Mục Chi Tiêu").setValue("   ");
+                            mDatabase.child(task.getResult().getUser().getUid()).child("Mục Thu Nhập").setValue("   ");
                             SignupActivity.super.finish();
                         }else {
                             Toast.makeText(SignupActivity.this, "Lỗi!!", Toast.LENGTH_SHORT).show();

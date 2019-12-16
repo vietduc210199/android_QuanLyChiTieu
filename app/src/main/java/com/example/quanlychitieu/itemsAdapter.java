@@ -1,9 +1,11 @@
 package com.example.quanlychitieu;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,9 +36,16 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.txtLoaiChiTieu.setText(items_chitieu.get(getItemCount() - position - 1).getLoaichitieu());
-        holder.txtGiaTri.setText(items_chitieu.get(getItemCount() - position - 1).getGiatri());
         holder.txtThoiGian.setText(items_chitieu.get(getItemCount() - position - 1).getThoigian());
-        holder.txtLoaiGiaoDich.setText(items_chitieu.get(getItemCount() - position - 1).getLoaigiaodich());
+        if(items_chitieu.get(getItemCount() - position - 1).getLoaigiaodich().equals("Khoản Chi")) {
+            holder.imgLoaiGiaoDich.setImageResource(R.drawable.chi_asset);
+            holder.txtGiaTri.setText("- " + items_chitieu.get(getItemCount() - position - 1).getGiatri());
+            holder.txtGiaTri.setTextColor(Color.argb(255, 233, 30, 99));
+        } else {
+            holder.imgLoaiGiaoDich.setImageResource(R.drawable.thu_asset);
+            holder.txtGiaTri.setText("+ " + items_chitieu.get(getItemCount() - position - 1).getGiatri());
+            holder.txtGiaTri.setTextColor(Color.argb(255, 54, 243, 28));
+        }
     }
 
     @Override
@@ -49,7 +58,7 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
         TextView txtLoaiChiTieu;
         TextView txtGiaTri;
         TextView txtThoiGian;
-        TextView txtLoaiGiaoDich;
+        ImageView imgLoaiGiaoDich;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -57,7 +66,7 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
             txtLoaiChiTieu = (TextView)itemView.findViewById(R.id.loai_chi_tieu);
             txtGiaTri = (TextView)itemView.findViewById(R.id.gia_tri_item);
             txtThoiGian = (TextView)itemView.findViewById(R.id.thoi_gian);
-            txtLoaiGiaoDich = (TextView) itemView.findViewById(R.id.loai_giao_dich);
+            imgLoaiGiaoDich = (ImageView) itemView.findViewById(R.id.image);
         }
     }
 }

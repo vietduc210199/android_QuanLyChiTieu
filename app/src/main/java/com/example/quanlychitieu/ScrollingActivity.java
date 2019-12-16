@@ -26,16 +26,19 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,31 +75,20 @@ public class ScrollingActivity extends AppCompatActivity {
 
         initview();// Tạo các biến đối tượng  ban đầu
 
-
-        if (user != null) {
-            userID = user.getUid();
-            mDatabase = mDatabase.child(userID);
-            dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi
-
-        } else {
-            Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
-            startActivityForResult(intent, 3);
-        }
-
         //Vào màn hình tạo giao dịch khi ấn nút
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ScrollingActivity.this, ChiTieuActivity.class);
+                intent.putExtra("ID", userID);
                 startActivityForResult(intent, 2);//Chạy màn hình giao dịch với code thực thi = 2
             }
         });
-
     }
 
 
-
     public void initview(){
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         tvSoDu = (TextView) findViewById(R.id.so_du);
@@ -116,12 +108,25 @@ public class ScrollingActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userID = user.getUid();
+            mDatabase = mDatabase.child(userID);
+            dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi
+
+        } else {
+            Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
+            startActivityForResult(intent, 3);
+        }
     }
 
     @Override
@@ -225,14 +230,11 @@ public class ScrollingActivity extends AppCompatActivity {
             user = mAuth.getCurrentUser();
             userID = user.getUid();
             mDatabase = FirebaseDatabase.getInstance().getReference().child(userID);
-
             dataChangeEvent();
         }
     }
 
     private void dataChangeEvent(){
-
-
         mDatabase.child("Giá trị số dư").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -291,7 +293,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
             }
         });
-
 
         mDatabase.child("Danh sách giao dịch").addValueEventListener(new ValueEventListener() {
             @Override

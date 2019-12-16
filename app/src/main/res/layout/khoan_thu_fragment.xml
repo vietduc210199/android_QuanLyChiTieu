@@ -15,25 +15,13 @@
         android:inputType="number" />
 
     <TextView
-        android:id="@+id/tv_GhiChu_thu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tv_giaTri_thu"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="324dp"
-        android:layout_marginBottom="-97dp"
-        android:text="Ghi Chú"
-        android:textSize="18dp"
-        android:textStyle="bold" />
-
-    <TextView
         android:id="@+id/tv_ThoiGian_thu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="253dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="165dp"
         android:text="Thời Gian"
         android:textSize="18dp"
         android:textStyle="bold" />
@@ -65,8 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="302dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="210dp"
         android:text="Giá Trị"
         android:textSize="18dp"
         android:textStyle="bold" />
@@ -77,15 +65,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="354dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="265dp"
         android:text="Mục Thu Nhập"
         android:textSize="18dp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/et_mucChiTieu_thu"
-
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_mucChiTieu_thu"
@@ -93,30 +80,22 @@
         android:layout_marginBottom="-4dp"
         android:layout_toEndOf="@+id/tv_mucChiTieu_thu" />
 
-    <EditText
-        android:id="@+id/et_GhiChu_thu"
-        android:layout_width="match_parent"
+    <Spinner
+        android:id="@+id/sp_mucChiTieu_thu"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tv_GhiChu_thu"
-        android:layout_alignBottom="@+id/et_GiaTri_thu"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="-149dp"
-        android:inputType="text"
-        android:overScrollMode="always"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:textSize="16dp"
-        android:textStyle="bold" />
+        android:layout_alignBottom="@+id/et_mucChiTieu_thu"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@+id/et_mucChiTieu_thu"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_thu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/et_GhiChu_thu"
         android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginStart="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:layout_marginEnd="49dp"
-        android:layout_marginBottom="-102dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp"
         android:src="@drawable/ic_done_black_24dp" />
 </RelativeLayout>

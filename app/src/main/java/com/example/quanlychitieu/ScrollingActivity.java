@@ -180,6 +180,15 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
 
         if(id == R.id.xoa_lich_su) {
             mDatabase.child("Danh sách giao dịch").setValue(" ");
+            arrayList.clear();
+            itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
+            recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
+        }
+
+        if(id == R.id.xoa_du_lieu) {
+            mDatabase.child("Thu Nhập").setValue(0);
+            mDatabase.child("Chi Tiêu").setValue(0);
+            mDatabase.child("Dao Động Số Dư").setValue(0);
         }
         return super.onOptionsItemSelected(item);
     }

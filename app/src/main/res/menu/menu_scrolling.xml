@@ -23,6 +23,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/xoa_du_lieu"
+        android:orderInCategory="100"
+        android:title="Xóa Dữ Liệu"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/logout"
         android:orderInCategory="100"
         android:title="Đăng Xuất"

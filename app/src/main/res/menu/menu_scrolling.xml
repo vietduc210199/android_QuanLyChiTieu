@@ -9,6 +9,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/xoa_lich_su"
+        android:orderInCategory="100"
+        android:title="Xóa Lịch Sử"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/logout"
         android:orderInCategory="100"
         android:title="Đăng Xuất"

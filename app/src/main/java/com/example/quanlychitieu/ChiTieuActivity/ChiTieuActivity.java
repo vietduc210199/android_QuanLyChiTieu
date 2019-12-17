@@ -19,9 +19,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.example.quanlychitieu.R;
-import com.example.quanlychitieu.chitieuitems;
-import com.example.quanlychitieu.itemsAdapter;
-import com.example.quanlychitieu.khoanchiScreen;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -150,15 +147,13 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                     fab_chi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            MucChiTieu = et_MucChiTieu_chi.getText().toString();
-                            GiaTri = et_GiaTri_chi.getText().toString();
-                            ThoiGian = et_ThoiGian_chi.getText().toString();
                             boolean check = false;
 
                             for (Integer i = 0; i< arrayList.size(); i++) {
                                 Log.i("Check" + i.toString(), arrayList.get(i).toString());
 
-                                if(et_MucChiTieu_chi.getText().toString().equals(arrayList.get(i).toString())){
+                                if(et_MucChiTieu_chi.getText().toString().toUpperCase().equals(arrayList.get(i).toString().toUpperCase())){
+                                    et_GiaTri_chi.setText(arrayList.get(i).toString());
                                     check = true;
                                     break;
                                 }
@@ -169,6 +164,10 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                                 arrayList.add(et_MucChiTieu_chi.getText().toString());
                                 mDatabase.child("Mục Chi Tiêu").setValue(arrayList);
                             }
+
+                            MucChiTieu = et_MucChiTieu_chi.getText().toString();
+                            GiaTri = et_GiaTri_chi.getText().toString();
+                            ThoiGian = et_ThoiGian_chi.getText().toString();
 
                             Bundle bundle = new Bundle();//Tạo Bundle để truyền dữ liệu về
 
@@ -246,16 +245,13 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                     fab_thu.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            MucChiTieu = et_MucChiTieu_thu.getText().toString();
-                            GiaTri = et_GiaTri_thu.getText().toString();
-                            ThoiGian = et_ThoiGian_thu.getText().toString();
-
                             boolean check = false;
 
                             for (Integer i = 0; i< arrayList.size(); i++) {
                                 Log.i("Check" + i.toString(), arrayList.get(i).toString());
 
-                                if(et_MucChiTieu_thu.getText().toString().equals(arrayList.get(i).toString())){
+                                if(et_MucChiTieu_thu.getText().toString().toUpperCase().equals(arrayList.get(i).toString().toUpperCase())){
+                                    et_GiaTri_thu.setText(arrayList.get(i).toString());
                                     check = true;
                                     break;
                                 }
@@ -266,6 +262,10 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                                 arrayList.add(et_MucChiTieu_thu.getText().toString());
                                 mDatabase.child("Mục Thu Nhập").setValue(arrayList);
                             }
+
+                            MucChiTieu = et_MucChiTieu_thu.getText().toString();
+                            GiaTri = et_GiaTri_thu.getText().toString();
+                            ThoiGian = et_ThoiGian_thu.getText().toString();
 
                             Bundle bundle = new Bundle();//Tạo Bundle để truyền dữ liệu về
 

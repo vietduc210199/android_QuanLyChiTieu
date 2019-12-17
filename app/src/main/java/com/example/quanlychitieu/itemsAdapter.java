@@ -12,14 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
-    ArrayList<chitieuitems> items_chitieu;
+    ArrayList<chitieuitems> arrayList;
     Context context;
 
-    public itemsAdapter(ArrayList<chitieuitems> items_chitieu, Context context) {
-        this.items_chitieu = items_chitieu;
+    public itemsAdapter(ArrayList<chitieuitems> arrayList, Context context) {
+        this.arrayList = arrayList;
         this.context = context;
     }
 
@@ -35,22 +35,22 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.txtLoaiChiTieu.setText(items_chitieu.get(getItemCount() - position - 1).getLoaichitieu());
-        holder.txtThoiGian.setText(items_chitieu.get(getItemCount() - position - 1).getThoigian());
-        if(items_chitieu.get(getItemCount() - position - 1).getLoaigiaodich().equals("Khoản Chi")) {
+        holder.txtLoaiChiTieu.setText(arrayList.get(getItemCount() - position - 1).getLoaichitieu());
+        holder.txtThoiGian.setText(arrayList.get(getItemCount() - position - 1).getThoigian());
+        if(arrayList.get(getItemCount() - position - 1).getLoaigiaodich().equals("Khoản Chi")) {
             holder.imgLoaiGiaoDich.setImageResource(R.drawable.chi_asset);
-            holder.txtGiaTri.setText("- " + items_chitieu.get(getItemCount() - position - 1).getGiatri());
+            holder.txtGiaTri.setText("- " + arrayList.get(getItemCount() - position - 1).getGiatri());
             holder.txtGiaTri.setTextColor(Color.argb(255, 233, 30, 99));
         } else {
             holder.imgLoaiGiaoDich.setImageResource(R.drawable.thu_asset);
-            holder.txtGiaTri.setText("+ " + items_chitieu.get(getItemCount() - position - 1).getGiatri());
+            holder.txtGiaTri.setText("+ " + arrayList.get(getItemCount() - position - 1).getGiatri());
             holder.txtGiaTri.setTextColor(Color.argb(255, 54, 243, 28));
         }
     }
 
     @Override
     public int getItemCount() {
-        return items_chitieu.size();
+        return arrayList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -68,5 +68,11 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
             txtThoiGian = (TextView)itemView.findViewById(R.id.thoi_gian);
             imgLoaiGiaoDich = (ImageView) itemView.findViewById(R.id.image);
         }
+
+
+    }
+
+    public interface OnItemListener {
+        void OnItemClick(int position);
     }
 }

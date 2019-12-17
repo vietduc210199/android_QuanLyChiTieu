@@ -66,6 +66,8 @@ public class ScrollingActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
+    private itemsAdapter itemsadapter;
+
     private String userID;
 
     @Override//Khởi chạy màn hình
@@ -73,7 +75,10 @@ public class ScrollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
+
+
         initview();// Tạo các biến đối tượng  ban đầu
+
 
         //Vào màn hình tạo giao dịch khi ấn nút
         fab.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +90,6 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void initview(){
 
@@ -107,26 +111,16 @@ public class ScrollingActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setNestedScrollingEnabled(false);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            userID = user.getUid();
-            mDatabase = mDatabase.child(userID);
-            dataChangeEvent();// Tạo các sự kiện khi data tại firebase thay đổi
-
-        } else {
-            Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
-            startActivityForResult(intent, 3);
-        }
     }
 
     @Override
@@ -156,9 +150,15 @@ public class ScrollingActivity extends AppCompatActivity {
         }
 
         if (id == R.id.logout) {
+            mAuth = FirebaseAuth.getInstance();
             mAuth.signOut();
             Intent intent = new Intent(ScrollingActivity.this, LoginActivity.class);
-            startActivityForResult(intent, 3);
+            startActivity(intent);
+            super.finish();
+        }
+
+        if(id == R.id.xoa_lich_su) {
+            mDatabase.child("Danh sách giao dịch").setValue(" ");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -199,6 +199,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
             arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian, loaigiaodich));//Add khoản giao dịch mới vào List
 
+            itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
+
             mDatabase.child("Danh sách giao dịch").setValue(arrayList);
 
             if(loaigiaodich.equals("Khoản Chi") ){
@@ -221,20 +223,19 @@ public class ScrollingActivity extends AppCompatActivity {
                 mDatabase.child("Dao Động Số Dư").setValue(daodongsodu);
                 mDatabase.child("Giá trị số dư").setValue(sodu);
             }
-
-
         }
 
-        if (resultcode == RESULT_OK && requestcode == 3)
-        {
-            user = mAuth.getCurrentUser();
-            userID = user.getUid();
-            mDatabase = FirebaseDatabase.getInstance().getReference().child(userID);
-            dataChangeEvent();
-        }
     }
 
-    private void dataChangeEvent(){
+    public void onStart() {
+        super.onStart();
+
+        Intent intent = getIntent();
+
+        userID = intent.getStringExtra("USERID");
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child(userID);
+
         mDatabase.child("Giá trị số dư").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -299,7 +300,7 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer i = 0;
 
-                arrayList = new ArrayList<chitieuitems>();
+                arrayList.clear();
                 while(dataSnapshot.child(i.toString()).getValue() != null)
                 {
                     chitieuitems items = dataSnapshot.child(i.toString()).getValue(chitieuitems.class);
@@ -307,9 +308,9 @@ public class ScrollingActivity extends AppCompatActivity {
                     arrayList.add(items);
                     i++;
                 }
-
-                itemsAdapter itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
+                itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
                 recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
+
             }
 
             @Override
@@ -317,5 +318,13 @@ public class ScrollingActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.finish();
     }
 }

@@ -11,10 +11,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.quanlychitieu.R;
+import com.example.quanlychitieu.ScrollingActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,6 +28,13 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPassword;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
+
+    private String userID;
+
+    public DatabaseReference mDatabase;
+
+    public final String USERID = "USERID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +78,36 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                       if(task.isSuccessful()){
-                          final Intent intent = getIntent();
-                          setResult(RESULT_OK, intent);
-                          LoginActivity.super.finish();
+                          mAuth = FirebaseAuth.getInstance();
+                          user = mAuth.getCurrentUser();
+                          if(user!=null) updateUI(user);
+
                       } else {
                           Toast.makeText(LoginActivity.this, "Đăng nhập thất bại!!", Toast.LENGTH_SHORT).show();
                       }
                     }
                 });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        if(user != null) updateUI(user);
+    }
+
+    private void updateUI(FirebaseUser currentUser) {
+        Intent intent = new Intent(LoginActivity.this, ScrollingActivity.class);
+        intent.putExtra(USERID, currentUser.getUid());
+        startActivity(intent);
+        this.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 }

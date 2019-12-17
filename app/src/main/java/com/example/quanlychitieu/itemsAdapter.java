@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,13 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 
-public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
-    ArrayList<chitieuitems> arrayList;
-    Context context;
+public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder> implements Filterable {
+    private ArrayList<chitieuitems> arrayList;
+    private ArrayList<chitieuitems> getItemsListFiltered;
+    private Context context;
+    private SelectedItem selectedItem;
 
-    public itemsAdapter(ArrayList<chitieuitems> arrayList, Context context) {
+    public itemsAdapter(ArrayList<chitieuitems> arrayList, Context context, SelectedItem selectedItem) {
         this.arrayList = arrayList;
+        getItemsListFiltered = arrayList;
         this.context = context;
+        this.selectedItem = selectedItem;
     }
 
     @NonNull
@@ -53,6 +59,43 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
         return arrayList.size();
     }
 
+
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults filterResults = new FilterResults();
+
+                if(constraint == null || constraint.length() == 0) {
+                    filterResults.count = getItemsListFiltered.size();
+                    filterResults.values = getItemsListFiltered;
+                }else {
+                    String searchChr = constraint.toString().toUpperCase();
+
+                    ArrayList<chitieuitems> resultData = new ArrayList<>();
+
+                    for(chitieuitems items: getItemsListFiltered) {
+                        if(items.getLoaichitieu().toUpperCase().contains(searchChr)){
+                            resultData.add(items);
+                        }
+                    }
+                    filterResults.count = resultData.size();
+                    filterResults.values = resultData;
+                }
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                arrayList = (ArrayList<chitieuitems>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+
+        return filter;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView txtLoaiChiTieu;
@@ -67,12 +110,19 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder>{
             txtGiaTri = (TextView)itemView.findViewById(R.id.gia_tri_item);
             txtThoiGian = (TextView)itemView.findViewById(R.id.thoi_gian);
             imgLoaiGiaoDich = (ImageView) itemView.findViewById(R.id.image);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedItem.selectedItem(arrayList.get(getAdapterPosition()));
+                }
+            });
         }
-
-
     }
 
-    public interface OnItemListener {
-        void OnItemClick(int position);
+    public interface SelectedItem{
+
+        void selectedItem(chitieuitems items);
+
     }
 }

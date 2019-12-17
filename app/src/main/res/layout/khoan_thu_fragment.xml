@@ -6,7 +6,7 @@
 
     <EditText
         android:id="@+id/et_GiaTri_thu"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_giaTri_thu"
         android:layout_marginStart="18dp"
@@ -73,7 +73,7 @@
 
     <EditText
         android:id="@+id/et_mucChiTieu_thu"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_mucChiTieu_thu"
         android:layout_marginStart="10dp"

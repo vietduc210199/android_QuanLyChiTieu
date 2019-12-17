@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -45,7 +46,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ScrollingActivity extends AppCompatActivity {
+public class ScrollingActivity extends AppCompatActivity implements itemsAdapter.SelectedItem{
 
     private ArrayList<chitieuitems> arrayList = new ArrayList<>(); // List Lưu trữ các khoản giao dịch
 
@@ -56,6 +57,7 @@ public class ScrollingActivity extends AppCompatActivity {
     private TextView tvThuNhap;
     private TextView tvChiTieu;
     private TextView tvDaoDongSoDu;
+    private SearchView searchView;
 
     private Integer sodu;// Khởi tạo số dư ban đầu
     private Integer thunhap = 100000;
@@ -89,6 +91,19 @@ public class ScrollingActivity extends AppCompatActivity {
                 startActivityForResult(intent, 2);//Chạy màn hình giao dịch với code thực thi = 2
             }
         });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                itemsadapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
     public void initview(){
@@ -107,6 +122,9 @@ public class ScrollingActivity extends AppCompatActivity {
         tvDaoDongSoDu = (TextView) findViewById(R.id.tv_DaoDongSoDu);
         tvDaoDongSoDu.setText(daodongsodu + " VND");
 
+        searchView = (SearchView) findViewById(R.id.search_view);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -120,6 +138,9 @@ public class ScrollingActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
+        recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
 
     }
 
@@ -199,7 +220,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
             arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian, loaigiaodich));//Add khoản giao dịch mới vào List
 
-            itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
+            itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
+
+            recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
+
 
             mDatabase.child("Danh sách giao dịch").setValue(arrayList);
 
@@ -308,8 +332,6 @@ public class ScrollingActivity extends AppCompatActivity {
                     arrayList.add(items);
                     i++;
                 }
-                itemsadapter = new itemsAdapter(arrayList, getApplicationContext());
-                recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
 
             }
 
@@ -317,14 +339,26 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+
         });
-
-
 
     }
 
     @Override
     public void onBackPressed() {
         super.finish();
+    }
+
+    @Override
+    public void selectedItem(chitieuitems items) {
+
+        Log.i("Check Item", items.getLoaichitieu());
+//        arrayList.remove(items);
+//
+//        itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
+//        recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
+//
+//        mDatabase.child("Danh sách giao dịch").setValue(arrayList);
+
     }
 }

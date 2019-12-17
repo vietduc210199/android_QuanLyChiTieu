@@ -153,7 +153,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                                 Log.i("Check" + i.toString(), arrayList.get(i).toString());
 
                                 if(et_MucChiTieu_chi.getText().toString().toUpperCase().equals(arrayList.get(i).toString().toUpperCase())){
-                                    et_GiaTri_chi.setText(arrayList.get(i).toString());
+                                    et_MucChiTieu_chi.setText(arrayList.get(i).toString());
                                     check = true;
                                     break;
                                 }
@@ -251,7 +251,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                                 Log.i("Check" + i.toString(), arrayList.get(i).toString());
 
                                 if(et_MucChiTieu_thu.getText().toString().toUpperCase().equals(arrayList.get(i).toString().toUpperCase())){
-                                    et_GiaTri_thu.setText(arrayList.get(i).toString());
+                                    et_MucChiTieu_thu.setText(arrayList.get(i).toString());
                                     check = true;
                                     break;
                                 }

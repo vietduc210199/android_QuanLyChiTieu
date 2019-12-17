@@ -2,6 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.quanlychitieu.ScrollingActivity">
+
+<!--    <item-->
+<!--        android:title="Search View"-->
+<!--        android:id="@+id/search_view"-->
+<!--        android:icon="@android:drawable/ic_menu_search"-->
+<!--        app:showAsAction="always"-->
+<!--        app:actionViewClass="androidx.appcompat.widget.SearchView"-->
+<!--        />-->
     <item
         android:id="@+id/dieu_chinh_so_du"
         android:orderInCategory="100"

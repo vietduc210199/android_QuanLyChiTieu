@@ -2,6 +2,7 @@ package com.example.quanlychitieu;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,13 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder> 
     private ArrayList<chitieuitems> arrayList;
     private ArrayList<chitieuitems> getItemsListFiltered;
     private Context context;
-    private SelectedItem selectedItem;
+    private SelectedItem selectedItems;
 
-    public itemsAdapter(ArrayList<chitieuitems> arrayList, Context context, SelectedItem selectedItem) {
+    public itemsAdapter(ArrayList<chitieuitems> arrayList, Context context, SelectedItem selectedItems) {
         this.arrayList = arrayList;
         getItemsListFiltered = arrayList;
         this.context = context;
-        this.selectedItem = selectedItem;
+        this.selectedItems = selectedItems;
     }
 
     @NonNull
@@ -92,7 +93,6 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder> 
                 notifyDataSetChanged();
             }
         };
-
         return filter;
     }
 
@@ -114,7 +114,8 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectedItem.selectedItem(arrayList.get(getAdapterPosition()));
+                    Log.d("check", arrayList.get(getAdapterPosition()).toString());
+                    selectedItems.selectedItem(arrayList.get(getItemCount() - getAdapterPosition() - 1));
                 }
             });
         }

@@ -27,8 +27,6 @@ public class fragment_khoan_chi extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.khoan_chi_fragment, container, false);
 
-
-
         return view;
     }
 }

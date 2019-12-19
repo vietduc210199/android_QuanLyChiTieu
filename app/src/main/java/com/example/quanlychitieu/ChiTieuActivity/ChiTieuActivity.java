@@ -6,9 +6,11 @@ import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -44,6 +47,8 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
     private String ThoiGian;
     private String LoaiGiaoDich = "Khoản Chi";
     private Calendar calendar;
+    private String GhiChu = new String();
+
 
     public DatabaseReference mDatabase;
 
@@ -51,6 +56,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
     public static final String GIATRI = "GIATRI";
     public static final String THOIGIAN = "THOIGIAN";
     public static final String LOAIGIAODICH = "LOAIGIAODICH";
+    public static final String GHICHU = "GHICHU";
     public static final String BUNDLE = "BUNDLE";
 
 
@@ -65,6 +71,8 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
         ViewPaperAdapter adapter = new ViewPaperAdapter(getSupportFragmentManager());
         adapter.AddFragment(new fragment_khoan_chi(), "Khoản Chi");
         adapter.AddFragment(new fragment_khoan_thu(), "Khoản Thu");
+
+        calendar = Calendar.getInstance();
 
         viewPager.setAdapter(adapter);
         //tabLayout.setupWithViewPager(viewPager);
@@ -93,6 +101,21 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                     final EditText et_ThoiGian_chi = (EditText) findViewById(R.id.et_ThoiGian_chi);
                     final ImageButton bnt_ThoiGian_chi = (ImageButton) findViewById(R.id.bnt_ThoiGian_chi);
                     final Spinner sp_mucChiTieu_chi = (Spinner) findViewById(R.id.sp_mucChiTieu_chi);
+                    final EditText et_GhiChu_chi = (EditText) findViewById(R.id.et_GhiChu_chi);
+                    final ImageButton bnt_GhiChu_chi = (ImageButton) findViewById(R.id.bnt_GhiChu_chi);
+
+                    bnt_GhiChu_chi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(ChiTieuActivity.this, GhiChuActivity.class);
+                            if(et_GhiChu_chi.getText().toString()!=null) {
+                                intent.putExtra("GHICHU", et_GhiChu_chi.getText().toString());
+                            }
+                            startActivityForResult(intent, 1);
+                        }
+                    });
+
+                    if(!GhiChu.isEmpty())et_GhiChu_chi.setText(GhiChu);
 
                     final ArrayList<String> arrayList = new ArrayList<String>();
 
@@ -132,7 +155,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                         }
                     });
 
-                    calendar = Calendar.getInstance();
+
                     et_ThoiGian_chi.setText(DateFormat.getDateInstance().format(calendar.getTime()));
 
                     bnt_ThoiGian_chi.setOnClickListener(new View.OnClickListener() {
@@ -165,9 +188,16 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                                 mDatabase.child("Mục Chi Tiêu").setValue(arrayList);
                             }
 
+
+
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            ThoiGian = format.format(calendar.getTime());
+                            et_ThoiGian_chi.setText(ThoiGian);
+
                             MucChiTieu = et_MucChiTieu_chi.getText().toString();
                             GiaTri = et_GiaTri_chi.getText().toString();
                             ThoiGian = et_ThoiGian_chi.getText().toString();
+                            GhiChu = et_GhiChu_chi.getText().toString();
 
                             Bundle bundle = new Bundle();//Tạo Bundle để truyền dữ liệu về
 
@@ -176,6 +206,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                             bundle.putString(GIATRI, GiaTri);
                             bundle.putString(THOIGIAN, ThoiGian);
                             bundle.putString(LOAIGIAODICH, LoaiGiaoDich);
+                            bundle.putString(GHICHU,GhiChu);
 
                             intent.putExtra(BUNDLE, bundle);//Gửi bundle vào intent
                             setResult(RESULT_OK, intent);//Truyền intent về với RESULT_OK
@@ -194,7 +225,22 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                     final EditText et_ThoiGian_thu = (EditText) findViewById(R.id.et_ThoiGian_thu);
                     final ImageButton bnt_ThoiGian_thu = (ImageButton) findViewById(R.id.bnt_ThoiGian_thu);
                     final Spinner sp_mucChiTieu_thu = (Spinner) findViewById(R.id.sp_mucChiTieu_thu);
+                    final ImageButton bnt_GhiChu_thu = (ImageButton) findViewById(R.id.bnt_GhiChu_thu);
+                    final EditText et_GhiChu_thu = (EditText) findViewById(R.id.et_GhiChu_thu);
                     final ArrayList<String> arrayList = new ArrayList<String>();
+
+                    bnt_GhiChu_thu.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(ChiTieuActivity.this, GhiChuActivity.class);
+                            if(et_GhiChu_thu.getText().toString()!=null) {
+                                intent.putExtra("GHICHU", et_GhiChu_thu.getText().toString());
+                            }
+                            startActivityForResult(intent, 2);
+                        }
+                    });
+
+                    if(!GhiChu.isEmpty()) et_GhiChu_thu.setText(GhiChu);
 
                     mDatabase.child("Mục Thu Nhập").addValueEventListener(new ValueEventListener() {
                         @Override
@@ -230,7 +276,6 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                         }
                     });
 
-                    calendar = Calendar.getInstance();
                     et_ThoiGian_thu.setText(DateFormat.getDateInstance().format(calendar.getTime()));
 
                     bnt_ThoiGian_thu.setOnClickListener(new View.OnClickListener() {
@@ -263,9 +308,14 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                                 mDatabase.child("Mục Thu Nhập").setValue(arrayList);
                             }
 
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            ThoiGian = format.format(calendar.getTime());
+                            et_ThoiGian_thu.setText(ThoiGian);
+
                             MucChiTieu = et_MucChiTieu_thu.getText().toString();
                             GiaTri = et_GiaTri_thu.getText().toString();
                             ThoiGian = et_ThoiGian_thu.getText().toString();
+                            GhiChu = et_GhiChu_thu.getText().toString();
 
                             Bundle bundle = new Bundle();//Tạo Bundle để truyền dữ liệu về
 
@@ -274,6 +324,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                             bundle.putString(GIATRI, GiaTri);
                             bundle.putString(THOIGIAN, ThoiGian);
                             bundle.putString(LOAIGIAODICH, LoaiGiaoDich);
+                            bundle.putString(GHICHU, GhiChu);
 
                             intent.putExtra(BUNDLE, bundle);//Gửi bundle vào intent
                             setResult(RESULT_OK, intent);//Truyền intent về với RESULT_OK
@@ -297,6 +348,40 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
         });
     }
 
+    @Override
+    protected void onActivityResult (int requestcode, int resultcode , Intent data) {
+        super.onActivityResult(requestcode, resultcode, data);
+
+        if(resultcode == RESULT_OK && requestcode == 1){
+            if(data.hasExtra("GHICHU")){
+                GhiChu = data.getExtras().getString("GHICHU");
+
+                tabLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tabLayout.setupWithViewPager(viewPager);
+                        selectTabIndex(0);
+
+                    }
+                });
+            }
+        }
+
+        if(resultcode == RESULT_OK && requestcode == 2){
+            if(data.hasExtra("GHICHU")){
+                GhiChu = data.getExtras().getString("GHICHU");
+
+                tabLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tabLayout.setupWithViewPager(viewPager);
+                        selectTabIndex(1);
+
+                    }
+                });
+            }
+        }
+    }
     private void selectTabIndex(final int index){
         new Handler().postDelayed(new Runnable() {
             @Override

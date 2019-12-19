@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.example.quanlychitieu.AccountActivity.LoginActivity;
 import com.example.quanlychitieu.AccountActivity.SignupActivity;
 import com.example.quanlychitieu.ChiTieuActivity.ChiTieuActivity;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,10 +44,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ScrollingActivity extends AppCompatActivity implements itemsAdapter.SelectedItem{
+public class ScrollingActivity extends AppCompatActivity implements itemsAdapter.SelectedItem, GhiChuDialog.GhiChuDialogListener {
 
     private ArrayList<chitieuitems> arrayList = new ArrayList<>(); // List Lưu trữ các khoản giao dịch
 
@@ -63,6 +66,8 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
     private Integer thunhap = 100000;
     private Integer chitieu = 100000;
     private Integer daodongsodu = 100000;
+
+    private chitieuitems itemslecting;
 
     public DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -226,8 +231,9 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
             String giatri = bundle.getString(ChiTieuActivity.GIATRI);
             String thoigian = bundle.getString(ChiTieuActivity.THOIGIAN);
             String loaigiaodich = bundle.getString(ChiTieuActivity.LOAIGIAODICH);
+            String ghichu = bundle.getString(ChiTieuActivity.GHICHU);
 
-            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian, loaigiaodich));//Add khoản giao dịch mới vào List
+            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian, loaigiaodich,ghichu));//Add khoản giao dịch mới vào List
 
             itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
 
@@ -257,7 +263,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
                 mDatabase.child("Giá trị số dư").setValue(sodu);
             }
         }
-
     }
 
     public void onStart() {
@@ -337,11 +342,19 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
                 while(dataSnapshot.child(i.toString()).getValue() != null)
                 {
                     chitieuitems items = dataSnapshot.child(i.toString()).getValue(chitieuitems.class);
+                    try {
+                        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(items.getThoigian());
 
+                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                        Log.i("check date", format.format(date));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        Log.i("check date", "deo dc");
+                    }
                     arrayList.add(items);
                     i++;
                 }
-
             }
 
             @Override
@@ -361,13 +374,24 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
     @Override
     public void selectedItem(chitieuitems items) {
 
-        Log.i("Check Item", items.getLoaichitieu());
-//        arrayList.remove(items);
-//
-//        itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
-//        recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
-//
-//        mDatabase.child("Danh sách giao dịch").setValue(arrayList);
+        itemslecting = items;
 
+        openGhiChuDialog(items.getGhichu().toString());
+    }
+
+    private void openGhiChuDialog(String ghichu) {
+        GhiChuDialog ghiChuDialog = new GhiChuDialog(ghichu);
+        ghiChuDialog.show(getSupportFragmentManager(), "ghi chú dialog");
+
+    }
+
+    @Override
+    public void sendDelete() {
+        arrayList.remove(itemslecting);
+
+        itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
+        recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
+
+        mDatabase.child("Danh sách giao dịch").setValue(arrayList);
     }
 }

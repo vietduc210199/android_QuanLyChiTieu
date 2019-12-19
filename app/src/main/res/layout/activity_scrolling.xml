@@ -117,18 +117,18 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="45dp"
-        android:layout_marginBottom="45dp"
-        app:backgroundTint="@color/colorAccent"
-        app:layout_anchor="@id/app_bar"
-        app:rippleColor="@color/colorPrimary"
-        app:srcCompat="@android:drawable/ic_input_add" />
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginEnd="45dp"-->
+<!--        android:layout_marginBottom="45dp"-->
+<!--        app:backgroundTint="@color/colorAccent"-->
+<!--        app:layout_anchor="@id/app_bar"-->
+<!--        app:rippleColor="@color/colorPrimary"-->
+<!--        app:srcCompat="@android:drawable/ic_input_add" />-->
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
@@ -145,5 +145,45 @@
         android:layout_height="648dp"
         android:layout_below="@+id/search_view"
         android:layout_marginTop="0dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_thong_ke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="#fff"
+            app:fabSize="mini"
+            android:layout_margin="4dp"
+            app:srcCompat="@drawable/ic_insert_chart_black_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_giao_dich"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="#fff"
+            app:fabSize="mini"
+            android:layout_margin="4dp"
+            app:srcCompat="@drawable/ic_work_black_24dp"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabSize="normal"
+            android:tint="#fff"
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:layout_margin="4dp"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

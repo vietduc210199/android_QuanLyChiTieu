@@ -5,14 +5,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import com.example.quanlychitieu.AccountActivity.LoginActivity;
-import com.example.quanlychitieu.AccountActivity.SignupActivity;
 import com.example.quanlychitieu.ChiTieuActivity.ChiTieuActivity;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,23 +20,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
+
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ScrollingActivity extends AppCompatActivity implements itemsAdapter.SelectedItem, GhiChuDialog.GhiChuDialogListener {
+public class ScrollingActivity extends AppCompatActivity implements itemsAdapter.SelectedItem, GhiChuDialog.GhiChuDialogListener, View.OnClickListener {
 
     private ArrayList<chitieuitems> arrayList = new ArrayList<>(); // List Lưu trữ các khoản giao dịch
 
@@ -61,6 +51,13 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
     private TextView tvChiTieu;
     private TextView tvDaoDongSoDu;
     private SearchView searchView;
+
+    private FloatingActionButton fab_menu;
+    private FloatingActionButton fab_giao_dich;
+    private FloatingActionButton fab_thong_ke;
+    private Boolean isMenuOpen = false;
+    private OvershootInterpolator interpolator = new OvershootInterpolator();
+    private Float translationY = 100f;
 
     private Integer sodu;// Khởi tạo số dư ban đầu
     private Integer thunhap = 100000;
@@ -82,20 +79,7 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
 
-
-
         initview();// Tạo các biến đối tượng  ban đầu
-
-
-        //Vào màn hình tạo giao dịch khi ấn nút
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ScrollingActivity.this, ChiTieuActivity.class);
-                intent.putExtra("ID", userID);
-                startActivityForResult(intent, 2);//Chạy màn hình giao dịch với code thực thi = 2
-            }
-        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -142,11 +126,73 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
 
 
         setSupportActionBar(toolbar);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab = (FloatingActionButton) findViewById(R.id.fab);
+
 
         itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
         recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
 
+        fabInit();
+
+    }
+
+    private void fabInit(){
+
+        fab_menu = (FloatingActionButton) findViewById(R.id.fab_menu);
+        fab_giao_dich = (FloatingActionButton) findViewById(R.id.fab_giao_dich);
+        fab_thong_ke = (FloatingActionButton) findViewById(R.id.fab_thong_ke);
+
+        fab_thong_ke.setOnClickListener(this);
+        fab_giao_dich.setOnClickListener(this);
+        fab_menu.setOnClickListener(this);
+
+        fab_giao_dich.setAlpha(0f);
+        fab_thong_ke.setAlpha(0f);
+
+
+
+        fab_giao_dich.setTranslationY(translationY);
+        fab_thong_ke.setTranslationY(translationY);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_menu:
+                isMenuOpen = !isMenuOpen;
+                if(isMenuOpen){
+                    fab_menu.animate().setInterpolator(interpolator).rotation(45F).setDuration(300).start();
+
+                    fab_giao_dich.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
+                    fab_thong_ke.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
+                } else {
+                    fab_menu.animate().setInterpolator(interpolator).rotation(0f).setDuration(300).start();
+
+                    fab_giao_dich.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                    fab_thong_ke.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                }
+                break;
+            case R.id.fab_giao_dich:
+                Intent intent = new Intent(ScrollingActivity.this, ChiTieuActivity.class);
+                intent.putExtra("ID", userID);
+                startActivityForResult(intent, 2);//Chạy màn hình giao dịch với code thực thi = 2
+
+                isMenuOpen = false;
+                fab_menu.animate().setInterpolator(interpolator).rotation(0f).setDuration(300).start();
+
+                fab_giao_dich.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                fab_thong_ke.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                break;
+            case R.id.fab_thong_ke:
+                Log.i("Check fab", "thong keeeeeee");
+
+                isMenuOpen = false;
+                fab_menu.animate().setInterpolator(interpolator).rotation(0f).setDuration(300).start();
+
+                fab_giao_dich.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                fab_thong_ke.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                break;
+        }
     }
 
     @Override
@@ -394,4 +440,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
 
         mDatabase.child("Danh sách giao dịch").setValue(arrayList);
     }
+
+
 }

@@ -11,8 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChiTieuActivity.GhiChuActivity"></activity>
-        <activity android:name=".ThongKeActivity" />
+        <activity android:name=".ChiTieuActivity.GhiChuActivity" />
+        <activity android:name=".ThongKeActivity.ThongKeActivity" />
         <activity android:name=".ChiTieuActivity.ChiTieuActivity" />
         <activity android:name=".AccountActivity.SignupActivity" />
         <activity android:name=".AccountActivity.LoginActivity">

@@ -46,11 +46,11 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder> 
         holder.txtThoiGian.setText(arrayList.get(getItemCount() - position - 1).getThoigian());
         if(arrayList.get(getItemCount() - position - 1).getLoaigiaodich().equals("Khoản Chi")) {
             holder.imgLoaiGiaoDich.setImageResource(R.drawable.chi_asset);
-            holder.txtGiaTri.setText("- " + arrayList.get(getItemCount() - position - 1).getGiatri());
+            holder.txtGiaTri.setText("- " + arrayList.get(getItemCount() - position - 1).getGiatri() + " VND");
             holder.txtGiaTri.setTextColor(Color.argb(255, 233, 30, 99));
         } else {
             holder.imgLoaiGiaoDich.setImageResource(R.drawable.thu_asset);
-            holder.txtGiaTri.setText("+ " + arrayList.get(getItemCount() - position - 1).getGiatri());
+            holder.txtGiaTri.setText("+ " + arrayList.get(getItemCount() - position - 1).getGiatri() +" VND");
             holder.txtGiaTri.setTextColor(Color.argb(255, 54, 243, 28));
         }
     }
@@ -59,7 +59,6 @@ public class itemsAdapter extends RecyclerView.Adapter<itemsAdapter.ViewHolder> 
     public int getItemCount() {
         return arrayList.size();
     }
-
 
     public Filter getFilter() {
         Filter filter = new Filter() {

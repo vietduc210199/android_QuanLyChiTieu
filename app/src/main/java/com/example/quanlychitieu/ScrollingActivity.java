@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.example.quanlychitieu.AccountActivity.LoginActivity;
 import com.example.quanlychitieu.ChiTieuActivity.ChiTieuActivity;
+import com.example.quanlychitieu.ThongKeActivity.ThongKeActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -124,7 +125,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-
         setSupportActionBar(toolbar);
 //        fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -133,7 +133,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
         recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
 
         fabInit();
-
     }
 
     private void fabInit(){
@@ -155,42 +154,43 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
         fab_thong_ke.setTranslationY(translationY);
     }
 
+    private void openMenu() {
+        isMenuOpen = true;
+        fab_menu.animate().setInterpolator(interpolator).rotation(45F).setDuration(300).start();
+
+        fab_giao_dich.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
+        fab_thong_ke.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
+    }
+
+    private void closeMenu() {
+        isMenuOpen = false;
+        fab_menu.animate().setInterpolator(interpolator).rotation(0f).setDuration(300).start();
+
+        fab_giao_dich.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+        fab_thong_ke.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_menu:
-                isMenuOpen = !isMenuOpen;
-                if(isMenuOpen){
-                    fab_menu.animate().setInterpolator(interpolator).rotation(45F).setDuration(300).start();
-
-                    fab_giao_dich.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
-                    fab_thong_ke.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
+                if(!isMenuOpen){
+                   openMenu();
                 } else {
-                    fab_menu.animate().setInterpolator(interpolator).rotation(0f).setDuration(300).start();
-
-                    fab_giao_dich.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
-                    fab_thong_ke.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                    closeMenu();
                 }
                 break;
             case R.id.fab_giao_dich:
-                Intent intent = new Intent(ScrollingActivity.this, ChiTieuActivity.class);
-                intent.putExtra("ID", userID);
-                startActivityForResult(intent, 2);//Chạy màn hình giao dịch với code thực thi = 2
-
-                isMenuOpen = false;
-                fab_menu.animate().setInterpolator(interpolator).rotation(0f).setDuration(300).start();
-
-                fab_giao_dich.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
-                fab_thong_ke.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                Intent intent_giao_dich = new Intent(ScrollingActivity.this, ChiTieuActivity.class);
+                intent_giao_dich.putExtra("ID", userID);
+                startActivityForResult(intent_giao_dich, 2);//Chạy màn hình giao dịch với code thực thi = 2
+                closeMenu();
                 break;
             case R.id.fab_thong_ke:
-                Log.i("Check fab", "thong keeeeeee");
-
-                isMenuOpen = false;
-                fab_menu.animate().setInterpolator(interpolator).rotation(0f).setDuration(300).start();
-
-                fab_giao_dich.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
-                fab_thong_ke.animate().translationY(translationY).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+                Intent intent_thong_ke = new Intent(ScrollingActivity.this, ThongKeActivity.class);
+                intent_thong_ke.putExtra("ID", userID);
+                startActivity(intent_thong_ke);
+                closeMenu();
                 break;
         }
     }
@@ -253,7 +253,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
         {
             if(data.hasExtra("SODU"))//Nếu giá trị trả về có key == "SODU"
             {
-
                 sodu = Integer.parseInt(data.getExtras().getString("SODU")); //Lấy giá trị vào biến lưu trữ số dư
 
                 mDatabase.child("Giá trị số dư").setValue(sodu, new DatabaseReference.CompletionListener() {
@@ -266,7 +265,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
                         }
                     }
                 });
-
             }
         }
 
@@ -279,12 +277,11 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
             String loaigiaodich = bundle.getString(ChiTieuActivity.LOAIGIAODICH);
             String ghichu = bundle.getString(ChiTieuActivity.GHICHU);
 
-            arrayList.add(new chitieuitems(mucchitieu, giatri + " VND", thoigian, loaigiaodich,ghichu));//Add khoản giao dịch mới vào List
+            arrayList.add(new chitieuitems(mucchitieu, giatri, thoigian, loaigiaodich,ghichu));//Add khoản giao dịch mới vào List
 
             itemsadapter = new itemsAdapter(arrayList, getApplicationContext(), this);
 
             recyclerView.setAdapter(itemsadapter);//Hiển thị lên màn hình
-
 
             mDatabase.child("Danh sách giao dịch").setValue(arrayList);
 
@@ -297,7 +294,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
 
                 daodongsodu = thunhap - chitieu;
                 mDatabase.child("Dao Động Số Dư").setValue(daodongsodu);
-
             }
             else if (loaigiaodich.equals("Khoản Thu")){
                 sodu += Integer.parseInt(giatri);
@@ -390,7 +386,6 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
                     chitieuitems items = dataSnapshot.child(i.toString()).getValue(chitieuitems.class);
                     try {
                         Date date=new SimpleDateFormat("dd/MM/yyyy").parse(items.getThoigian());
-
                         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
                         Log.i("check date", format.format(date));
@@ -440,6 +435,4 @@ public class ScrollingActivity extends AppCompatActivity implements itemsAdapter
 
         mDatabase.child("Danh sách giao dịch").setValue(arrayList);
     }
-
-
 }

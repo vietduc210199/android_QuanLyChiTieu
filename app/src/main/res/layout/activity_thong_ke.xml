@@ -1,10 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/AppTheme.NoActionBar"
-    tools:context=".ThongKeActivity">
+    tools:context=".ThongKeActivity.ThongKeActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_thong_ke"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/et_tk_loai"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Tất cả"
+                android:textStyle="bold"
+                android:enabled="false"/>
+
+            <Spinner
+                android:id="@+id/sp_tk_loai"
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_alignBottom="@+id/et_tk_loai"
+                android:layout_marginStart="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toEndOf="@+id/et_tk_loai" />
+
+            <EditText
+                android:id="@+id/et_tk_muc"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_tk_loai"
+                android:layout_alignStart="@+id/et_tk_loai"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="8dp"
+                android:text="Tất cả"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:enabled="false"/>
+
+            <Spinner
+                android:id="@+id/sp_tk_muc"
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_alignBottom="@+id/et_tk_muc"
+                android:layout_marginStart="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toEndOf="@+id/et_tk_muc"/>
+
+            <TextView
+                android:id="@+id/tv_tk_ngay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_tk_muc"
+                android:layout_alignStart="@+id/et_tk_muc"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="8dp"
+                android:text="Ngày"
+                android:textSize="24dp" />
+
+            <EditText
+                android:id="@+id/et_tk_ngay"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_tk_ngay"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/tv_tk_ngay"
+                android:inputType="date"/>
+
+            <TextView
+                android:id="@+id/tv_tk_thang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_tk_muc"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@+id/et_tk_ngay"
+                android:text="Tháng"
+                android:textSize="24dp" />
+
+            <EditText
+                android:id="@+id/et_tk_thang"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_tk_thang"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/tv_tk_thang"
+                android:inputType="date" />
+
+            <TextView
+                android:id="@+id/tv_tk_nam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_tk_muc"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@+id/et_tk_thang"
+                android:text="Năm"
+                android:textSize="24dp" />
+
+            <EditText
+                android:id="@+id/et_tk_nam"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_tk_nam"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/tv_tk_nam"
+                android:inputType="date" />
+
+            <Button
+                android:id="@+id/bnt_thong_ke"
+                android:text="Lập thống kê"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="#0288D1"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:id="@+id/tv_danhsach_items_tk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_bar_thong_ke"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Danh sách các giao dịch tìm được"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/bnt_danhsach_items_tk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_danhsach_items_tk"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toEndOf="@+id/tv_danhsach_items_tk"
+        android:background="@drawable/ic_content_paste_black_24dp"/>
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_danhsach_items_tk"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/layout_tk_khoan_chi"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="64dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_thong_ke_chi"
+                android:src="@drawable/chi_asset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_thong_ke_chi"
+                android:layout_gravity="center"
+                android:paddingTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_tk_khoan_thu"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="64dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_thong_ke_thu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/thu_asset" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_thong_ke_thu"
+                android:layout_gravity="center"
+                android:paddingTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

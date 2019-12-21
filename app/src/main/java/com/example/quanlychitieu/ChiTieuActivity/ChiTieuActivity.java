@@ -124,7 +124,6 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             Integer i = 0;
 
-
                             while(dataSnapshot.child(i.toString()).getValue() != null)
                             {
                                 arrayList.add(dataSnapshot.child(i.toString()).getValue().toString());

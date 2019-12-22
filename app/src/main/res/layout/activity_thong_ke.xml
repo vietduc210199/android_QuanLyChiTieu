@@ -164,64 +164,92 @@
         android:layout_toEndOf="@+id/tv_danhsach_items_tk"
         android:background="@drawable/ic_content_paste_black_24dp"/>
 
-    <RelativeLayout
-
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tv_danhsach_items_tk"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layout_tk_khoan_chi"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tv_danhsach_items_tk"
+            android:layout_marginTop="8dp"
             android:orientation="vertical"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="64dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            >
 
-            <ImageView
-                android:id="@+id/img_thong_ke_chi"
-                android:src="@drawable/chi_asset"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:id="@+id/lo_khoan_chi"
+                android:layout_width="match_parent"
+                android:layout_height="400dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_thong_ke_chi"
-                android:layout_gravity="center"
-                android:paddingTop="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_tk_khoan_chi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Khoản Chi"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
 
-        </LinearLayout>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart_khoan_chi"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/tv_tk_khoan_chi"
+                    android:layout_marginTop="8dp" >
 
-        <LinearLayout
-            android:id="@+id/layout_tk_khoan_thu"
-            android:orientation="vertical"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="64dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/img_thong_ke_thu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/thu_asset" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+                    </ScrollView>
+                </com.github.mikephil.charting.charts.PieChart>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_thong_ke_thu"
-                android:layout_gravity="center"
-                android:paddingTop="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lo_khoan_thu"
+                android:layout_alignTop="@id/lo_khoan_chi"
+                android:layout_margin="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="400dp">
+
+                <TextView
+                    android:id="@+id/tv_tk_khoan_thu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Khoản Thu"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart_khoan_thu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/tv_tk_khoan_thu"
+                    android:layout_marginTop="8dp" />
+
+            </RelativeLayout>
 
 
-    </RelativeLayout>
+        </LinearLayout
+            >
+
+    </ScrollView>
+
 
 </RelativeLayout>

@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anychart.AnyChart;
@@ -64,6 +65,7 @@ public class ThongKeActivity extends AppCompatActivity {
     private ArrayList<String> key_all = new ArrayList<String>();
     private ArrayList<String> key_khoan_chi = new ArrayList<String>();
     private ArrayList<String> key_khoan_thu = new ArrayList<String>();
+    private TextView tv_tk_chart;
 
     public DatabaseReference mDatabase;
     private String userID;
@@ -112,9 +114,8 @@ public class ThongKeActivity extends AppCompatActivity {
                     lo_khoan_chi.getLayoutParams().height = 1000;
                     lo_khoan_thu.setVisibility(View.VISIBLE);
                     lo_khoan_thu.getLayoutParams().height = 1000;
-                    ArrayAdapter adapterMuc = new ArrayAdapter<String>(ThongKeActivity.this, R.layout.support_simple_spinner_dropdown_item, mucList);
-                    adapterMuc.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                    sp_muc.setAdapter(adapterMuc);
+                    sp_muc.setEnabled(false);
+                    et_muc.setText("Tất cả");
                 } else if(text.equals("Khoản Chi")) {
                     Log.i("Check text change", text);
                     lo_khoan_chi.setVisibility(View.VISIBLE);
@@ -124,16 +125,18 @@ public class ThongKeActivity extends AppCompatActivity {
                     ArrayAdapter adapterMuc = new ArrayAdapter<String>(ThongKeActivity.this, R.layout.support_simple_spinner_dropdown_item, muc_chi_tieu_List);
                     adapterMuc.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     sp_muc.setAdapter(adapterMuc);
+                    sp_muc.setEnabled(true);
                 }
                 else if(text.equals("Khoản Thu")) {
                     Log.i("Check text change", text);
-                    lo_khoan_thu.setVisibility(View.VISIBLE);
-                    lo_khoan_thu.getLayoutParams().height = 1000;
-                    lo_khoan_chi.setVisibility(View.INVISIBLE);
-                    lo_khoan_chi.getLayoutParams().height = 0;
+                    lo_khoan_thu.setVisibility(View.INVISIBLE);
+                    lo_khoan_thu.getLayoutParams().height = 0;
+                    lo_khoan_chi.setVisibility(View.VISIBLE);
+                    lo_khoan_chi.getLayoutParams().height = 1000;
                     ArrayAdapter adapterMuc = new ArrayAdapter<String>(ThongKeActivity.this, R.layout.support_simple_spinner_dropdown_item, muc_thu_nhap_List);
                     adapterMuc.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     sp_muc.setAdapter(adapterMuc);
+                    sp_muc.setEnabled(true);
                 }
             }
 
@@ -235,7 +238,6 @@ public class ThongKeActivity extends AppCompatActivity {
                 }
 
                 if(!et_muc.getText().toString().equals("Tất cả")) {
-
                     key.clear();
                     key.add(et_muc.getText().toString());
                     key.add("Còn lại");
@@ -243,9 +245,13 @@ public class ThongKeActivity extends AppCompatActivity {
                     while(i <= arrayList_thong_ke.size()){
                         chitieuitems items = arrayList_thong_ke.get(i-1);
                         if(!items.getLoaichitieu().toString().equals(et_muc.getText().toString())) {
+                            Tong+=Integer.parseInt(items.getGiatri());
                             arrayList_thong_ke.remove(items);
                         }
-                        else i++;
+                        else {
+                            Tong += Integer.parseInt(arrayList_thong_ke.get(i-1).getGiatri());
+                            i++;
+                        }
                     }
                 }
 
@@ -253,10 +259,10 @@ public class ThongKeActivity extends AppCompatActivity {
                     if(i==0) {
                         Integer temp = 0;
                         for(int j = 0; j < arrayList_thong_ke.size(); j++){
-                            Tong+=Integer.parseInt(arrayList_thong_ke.get(j).getGiatri());
                             if(arrayList_thong_ke.get(j).getLoaichitieu().equals(key.get(i))) temp += Integer.parseInt(arrayList_thong_ke.get(j).getGiatri());
                         }
                         values.add(temp);
+                        Tong -= temp;
                     }
                     else values.add(Tong);
                 }
@@ -276,18 +282,21 @@ public class ThongKeActivity extends AppCompatActivity {
                 }
 
                 if(!et_muc.getText().toString().equals("Tất cả")) {
+                    tv_tk_chart.setText(et_muc.getText().toString());
                     chart_tk_khoan_chi = setUpChart(chart_tk_khoan_chi, key, values);
-                }
-                if(et_loai.getText().toString().equals("Tất cả")) {
+                }else if(et_loai.getText().toString().equals("Tất cả")) {
+                    tv_tk_chart.setText("Khoản Chi");
                     chart_tk_khoan_chi = setUpChart(chart_tk_khoan_chi, key_khoan_chi, values_chi);
 
                     chart_tk_khoan_thu = setUpChart(chart_tk_khoan_thu, key_khoan_thu, values_thu);
                 }
                 else if(et_loai.getText().toString().equals("Khoản Chi")) {
+                    tv_tk_chart.setText("Khoản Chi");
                     chart_tk_khoan_chi = setUpChart(chart_tk_khoan_chi, key_khoan_chi, values_chi);
                 }
                 else {
-                    chart_tk_khoan_thu = setUpChart(chart_tk_khoan_thu, key_khoan_thu, values_thu);
+                    tv_tk_chart.setText("Khoản thu");
+                    chart_tk_khoan_thu = setUpChart(chart_tk_khoan_chi, key_khoan_thu, values_thu);
                 }
 
                 Toast.makeText(ThongKeActivity.this, "Thống kê thành công!", Toast.LENGTH_SHORT).show();
@@ -343,6 +352,8 @@ public class ThongKeActivity extends AppCompatActivity {
         lo_khoan_thu = (RelativeLayout) findViewById(R.id.lo_khoan_thu);
         chart_tk_khoan_chi = (PieChart) findViewById(R.id.chart_khoan_chi);
         chart_tk_khoan_thu = (PieChart) findViewById(R.id.chart_khoan_thu);
+
+        tv_tk_chart = (TextView) findViewById(R.id.tv_tk_khoan_chi);
 
         Intent intent = getIntent();
         userID = intent.getStringExtra("ID");

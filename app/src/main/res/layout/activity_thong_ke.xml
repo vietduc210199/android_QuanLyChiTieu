@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_thong_ke"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="210dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
@@ -73,11 +73,12 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="8dp"
                 android:text="Ngày"
-                android:textSize="24dp" />
+                android:textSize="20dp"
+                android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/et_tk_ngay"
-                android:layout_width="60dp"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_tk_ngay"
                 android:layout_marginStart="8dp"
@@ -94,11 +95,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/et_tk_ngay"
                 android:text="Tháng"
-                android:textSize="24dp" />
+                android:textSize="20dp"
+                android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/et_tk_thang"
-                android:layout_width="60dp"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_tk_thang"
                 android:layout_marginStart="8dp"
@@ -115,11 +117,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/et_tk_thang"
                 android:text="Năm"
-                android:textSize="24dp" />
+                android:textSize="20dp"
+                android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/et_tk_nam"
-                android:layout_width="60dp"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_tk_nam"
                 android:layout_marginStart="8dp"
@@ -177,8 +180,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/tv_danhsach_items_tk"
             android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/lo_khoan_chi"
@@ -202,17 +204,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/tv_tk_khoan_chi"
-                    android:layout_marginTop="8dp" >
+                    android:layout_marginTop="8dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="8dp">
 
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-                    </ScrollView>
                 </com.github.mikephil.charting.charts.PieChart>
 
             </RelativeLayout>
@@ -241,13 +236,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/tv_tk_khoan_thu"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="8dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="8dp"/>
 
             </RelativeLayout>
 
-
-        </LinearLayout
-            >
+        </LinearLayout>
 
     </ScrollView>
 

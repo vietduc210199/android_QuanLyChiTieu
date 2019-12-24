@@ -24,7 +24,6 @@ public class ViewPaperAdapter extends FragmentPagerAdapter {
         return fragmentList.get(position);
     }
 
-
     @Override
     public int getCount() {
         return fragmentListTitles.size();

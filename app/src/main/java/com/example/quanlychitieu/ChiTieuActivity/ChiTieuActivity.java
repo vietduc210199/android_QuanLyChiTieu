@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.quanlychitieu.R;
 import com.google.android.material.appbar.AppBarLayout;
@@ -207,9 +208,13 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                             bundle.putString(LOAIGIAODICH, LoaiGiaoDich);
                             bundle.putString(GHICHU,GhiChu);
 
-                            intent.putExtra(BUNDLE, bundle);//Gửi bundle vào intent
-                            setResult(RESULT_OK, intent);//Truyền intent về với RESULT_OK
-                            ChiTieuActivity.super.finish();
+                            if(GiaTri.isEmpty()) {
+                                Toast.makeText(ChiTieuActivity.this, "Vui Lòng Nhập Đầy Đủ Thông Tin", Toast.LENGTH_SHORT).show();
+                            } else{
+                                intent.putExtra(BUNDLE, bundle);//Gửi bundle vào intent
+                                setResult(RESULT_OK, intent);//Truyền intent về với RESULT_OK
+                                ChiTieuActivity.super.finish();
+                            }
                         }
                     });
                 }else {
@@ -325,9 +330,13 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
                             bundle.putString(LOAIGIAODICH, LoaiGiaoDich);
                             bundle.putString(GHICHU, GhiChu);
 
-                            intent.putExtra(BUNDLE, bundle);//Gửi bundle vào intent
-                            setResult(RESULT_OK, intent);//Truyền intent về với RESULT_OK
-                            ChiTieuActivity.super.finish();
+                            if(GiaTri.isEmpty()) {
+                                Toast.makeText(ChiTieuActivity.this, "Vui Lòng Nhập Đầy Đủ Thông Tin", Toast.LENGTH_SHORT).show();
+                            } else{
+                                intent.putExtra(BUNDLE, bundle);//Gửi bundle vào intent
+                                setResult(RESULT_OK, intent);//Truyền intent về với RESULT_OK
+                                ChiTieuActivity.super.finish();
+                            }
                         }
                     });
                 }
@@ -381,6 +390,7 @@ public class ChiTieuActivity extends AppCompatActivity  implements DatePickerDia
             }
         }
     }
+
     private void selectTabIndex(final int index){
         new Handler().postDelayed(new Runnable() {
             @Override

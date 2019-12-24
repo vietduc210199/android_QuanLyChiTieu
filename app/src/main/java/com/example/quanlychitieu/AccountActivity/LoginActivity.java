@@ -30,10 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
-    private String userID;
-
-    public DatabaseReference mDatabase;
-
     public final String USERID = "USERID";
 
     @Override

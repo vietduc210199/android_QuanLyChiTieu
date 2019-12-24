@@ -18,7 +18,6 @@ public class fragment_khoan_chi extends Fragment {
 
     View view;
 
-
     public fragment_khoan_chi() {
     }
 

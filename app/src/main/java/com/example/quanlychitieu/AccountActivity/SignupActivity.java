@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
 public class SignupActivity extends AppCompatActivity {
 
     private EditText etUsername;
@@ -44,7 +43,9 @@ public class SignupActivity extends AppCompatActivity {
         bntRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registration();
+                if(!etPassword.getText().toString().equals(etRePassword.getText().toString())) {
+                    Toast.makeText(SignupActivity.this, "Mật Khẩu Nhập Vào Không Trùng Khớp", Toast.LENGTH_SHORT).show();
+                }else registration(etUsername.getText().toString(), etPassword.getText().toString());
             }
         });
     }
@@ -61,9 +62,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    private void registration() {
-        String email = etUsername.getText().toString();
-        String password = etPassword.getText().toString();
+    private void registration(String email, String password) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -80,8 +79,7 @@ public class SignupActivity extends AppCompatActivity {
                             mDatabase.child(task.getResult().getUser().getUid()).child("Mục Thu Nhập").setValue("   ");
                             SignupActivity.super.finish();
                         }else {
-                            Toast.makeText(SignupActivity.this, "Lỗi!!", Toast.LENGTH_SHORT).show();
-                            Log.e("check", "loi");
+                            Toast.makeText(SignupActivity.this, "Thông Tin Tài Khoản Không Hợp Lệ!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                     }
